@@ -15,19 +15,28 @@ import pyautogui
 import requests
 import win32api
 
-config = json.load(open(str(pathlib.Path()/'config.json'), 'r'))
+from printers.console import ConsolePrinter
+
 started = time.time()
-max_time = config["max_time"]  # максимальное время работы скрипта в минутах
-bot_token = config["bot_token"]  # токен бота
-chat_id = config["chat_id"]  # id чата
-exit_btn_code = config["exit_btn_code"]
+
+try:
+    config = json.load(open(str(pathlib.Path() / 'config.json'), 'r'))
+
+    max_time = int(config["max_time"])  # максимальное время работы скрипта в минутах
+    bot_token = config["bot_token"]  # токен бота
+    chat_id = int(config["chat_id"])  # id чата
+    push_message_btn = int(config.get("push_message_btn", 4))  # по дефолту колесико мыши
+    exit_btn_code = int(config.get("exit_btn_code", 9))  # по дефолту TAB
+except:
+    pyautogui.alert(text='Ошибка в настройки конфиг файла', title='Ошибка', button='OK, поправлю')
+    exit(0)
 
 
-state_left = win32api.GetKeyState(0x01)
-state_right = win32api.GetKeyState(0x02)
+printer = ConsolePrinter(config)
+state_left = win32api.GetKeyState(4)
 
 while True:
-    scroll_btn = win32api.GetKeyState(0x04)
+    scroll_btn = win32api.GetKeyState(4)
 
     if scroll_btn != state_left:  # Button state changed
         state_left = scroll_btn
@@ -42,12 +51,12 @@ while True:
 
             resp = requests.post(
                 f"https://api.telegram.org/bot{bot_token}/sendPhoto?chat_id={chat_id}", files=files)
-            print(time.time() - started)
+            printer.print_msg(time.time() - started)
     # завершаем работу по истечению времени (/60 - переводим м минуты)
     if (time.time() - started) / 60 > max_time:
-        print(f'завершилось время')
+        printer.print_msg(f'завершилось время')
         break
-    # так же завершение работы по нажатию клавишы TAB
-    if win32api.GetAsyncKeyState(9):
-        print(f'нажата клавиша TAB')
+    # так же завершение работы по нажатию клавишы выхода
+    if win32api.GetKeyState(exit_btn_code) == 0:
+        printer.print_msg(f'нажата клавиша #{exit_btn_code}')
         break

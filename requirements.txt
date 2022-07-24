@@ -1,3 +1,4 @@
 pyautogui
 requests
-win32api
+pywin32
+pillow
