@@ -5,8 +5,10 @@ from json import JSONDecodeError
 import pyautogui
 
 from printers.console import ConsolePrinter
+from printers.tg_printer import TelegramPrinter
+from printers.window import WindowPrinter
 from processor import Processor
-from src.printers.base_printer import Level
+from printers.base_printer import Level
 from telegram_connector import TelegramConnector
 
 
@@ -20,7 +22,15 @@ def init_processor():
     else:
         try:
             tg_connector = TelegramConnector(config)
-            printer = ConsolePrinter(config, level=Level.INFO)
+            printer = {
+                'console': ConsolePrinter,
+                'telegram': TelegramPrinter,
+                'window': WindowPrinter,
+            }[config.get('printer', 'telegram')](
+                config,
+                level=Level.INFO,
+                tg_connector=tg_connector
+            )
             return Processor(config, printer, tg_connector)
         except ValueError:
             raise

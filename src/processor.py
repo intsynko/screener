@@ -22,7 +22,7 @@ class Processor:
         self._5_minute_notified = False
 
     def run_loop(self):
-        self.printer.print_msg('started')
+        self.greetings()
         self._started = time.time()
 
         state_left = win32api.GetKeyState(self.push_message_btn)
@@ -42,6 +42,7 @@ class Processor:
             self.notify()
             if self.check_exit():
                 break
+        self.buy()
 
     def make_screenshot(self):
         myScreenshot = pyautogui.screenshot()
@@ -73,3 +74,15 @@ class Processor:
             return True
 
         return False
+
+    def greetings(self):
+        self.printer.print_msg("""
+        Ура! Работает ...
+        """)
+
+    def buy(self):
+        self.printer.print_msg("""
+        Завершаю работу! Надеюсь помог 😇
+        Отзывы: @intsyn
+        Ставьте звезду в репозиторий: https://github.com/intsynko/screener
+        """)
