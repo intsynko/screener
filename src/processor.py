@@ -4,6 +4,7 @@ import time
 import pyautogui
 import win32api
 
+from commands import CommandsExecutor
 from printers.base_printer import Level
 from telegram_connector import TelegramConnectorException
 
@@ -14,15 +15,18 @@ class Processor:
         self.max_time = int(config.get("max_time", 60))
         self.push_message_btn = int(config.get("push_message_btn", 4))
         self.exit_btn_code = int(config.get("exit_btn_code", 9))
+        commands_settings = config.get("commands_settings", {})
 
         self.printer = printer
         self.tg_connector = tg_connector
+        self.commands_executor = CommandsExecutor(tg_connector, printer, processor=self, config=commands_settings)
 
         self._started = None
         self._5_minute_notified = False
 
     def run_loop(self):
         self.greetings()
+        self.commands_executor.set_commands()
         self._started = time.time()
 
         state_left = win32api.GetKeyState(self.push_message_btn)
@@ -40,6 +44,7 @@ class Processor:
                     else:
                         self.printer.print_msg(time.time() - self._started, level=Level.DEBUG)
             self.notify()
+            self.commands_executor.check_commands()
             if self.check_exit():
                 break
         self.buy()
@@ -65,12 +70,12 @@ class Processor:
     def check_exit(self) -> bool:
         # завершаем работу по истечению времени (/60 - переводим м минуты)
         if self.work_time > self.max_time:
-            self.printer.print_msg(f'завершилось время')
+            self.printer.print_msg(f'завершилось время', level=Level.DEBUG)
             return True
 
         # так же завершение работы по нажатию клавишы выхода
         if win32api.GetKeyState(self.exit_btn_code) < 0:
-            self.printer.print_msg(f'нажата клавиша #{self.exit_btn_code}')
+            self.printer.print_msg(f'нажата клавиша #{self.exit_btn_code}', level=Level.DEBUG)
             return True
 
         return False

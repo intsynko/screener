@@ -4,5 +4,10 @@
   "chat_id": "-1000000000000",
   "push_message_btn": 4,
   "exit_btn_code": 9,
-  "printer": "window"
+  "printer": "telegram",
+  "commands_settings": {
+    "enabled": true,
+    "shutdown_enabled": true,
+    "pull_delay": 3
+  }
 }
