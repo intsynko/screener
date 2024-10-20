@@ -1,16 +1,16 @@
 Настройки (* - обязательное поле, каждая следующая версия включает настройки предыдущих):
-    - v_1:
-        - *bot_token - (str) токен бота (в формате 0000000:aaaaaaa...)
-        - *chat_id - (str) id чата в телеграмме (может быть отрицательным)
-        - max_time - (int) максимальное время работы скрипта в минутах
-    - v_2:
-        - exit_btn_code - (int) - код клавишы выхода, изначально TAB (9) [примеры клавиш](https://stackoverflow.com/questions/31363860/how-do-i-get-the-name-of-a-key-in-pywin32-giving-its-keycode)
-        - printer - (str) вариант уведомлений (console, telegram, window)
-        - push_message_btn - (int) код клавишы отправки скрина, изначально КОЛСИКО МЫШИ (4)
-    - v_3:
-        - commands_settings
-            - pull_delay - (int) время в секндах между запросами за новыми командами
-            - enabled - (bool) включены ли команды 
-            - shutdown_enabled - (bool) можно ли выключать через команды 
-    - v_4:
-        - compression - (bool: true, false) - сжимать ли скрины при отправлении в телеграмм (по дефолту true)
+- v_1:
+    - *bot_token - (str) токен бота (в формате 0000000:aaaaaaa...)
+    - *chat_id - (str) id чата в телеграмме (может быть отрицательным)
+    - max_time - (int) максимальное время работы скрипта в минутах
+- v_2:
+    - exit_btn_code - (int) - код клавишы выхода, изначально TAB (9) [примеры клавиш](https://stackoverflow.com/questions/31363860/how-do-i-get-the-name-of-a-key-in-pywin32-giving-its-keycode)
+    - printer - (str) вариант уведомлений (console, telegram, window)
+    - push_message_btn - (int) код клавишы отправки скрина, изначально КОЛСИКО МЫШИ (4)
+- v_3:
+    - commands_settings
+        - pull_delay - (int) время в секндах между запросами за новыми командами
+        - enabled - (bool) включены ли команды 
+        - shutdown_enabled - (bool) можно ли выключать через команды 
+- v_4:
+    - compression - (bool: true, false) - сжимать ли скрины при отправлении в телеграмм (по дефолту true)
