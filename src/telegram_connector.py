@@ -14,6 +14,7 @@ class TelegramConnector:
         try:
             self.bot_token = config["bot_token"]  # токен бота
             self.chat_id = int(config["chat_id"])  # id чата
+            self.compression = bool(config.get("compression", True))
         except KeyError:
             raise TelegramConnectorException("bot_token и chat_id обязательные параметры конфига")
         except ValueError:
@@ -31,11 +32,18 @@ class TelegramConnector:
         )
 
     def send_pic(self, img_byte_arr):
-        files = {'photo': img_byte_arr}
-        self._send_request(
-            url=f"{self.url}{self.bot_token}/sendPhoto?chat_id={self.chat_id}",
-            files=files
-        )
+        if self.compression:
+            files = {'photo': img_byte_arr}
+            self._send_request(
+                url=f"{self.url}{self.bot_token}/sendPhoto?chat_id={self.chat_id}",
+                files=files
+            )
+        else:
+            files = {'document': ('screen.png', img_byte_arr)}
+            self._send_request(
+                url=f"{self.url}{self.bot_token}/sendDocument?chat_id={self.chat_id}",
+                files=files
+            )
 
     def set_commands(self, commands: List[Dict]):
         self._send_request(
