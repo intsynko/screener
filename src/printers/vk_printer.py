@@ -4,9 +4,9 @@ from vk_connector import VkConnector
 
 class VkPrinter(BasePrinter):
 
-    def __init__(self, config, level: Level, vk_connector: VkConnector, **kwargs):
+    def __init__(self, config, level: Level, **kwargs):
         super().__init__(config, level)
-        self._vk_connector = vk_connector
+        self._vk_connector = VkConnector(config)
 
     def _print(self, msg, level):
         self._vk_connector.send_message(msg)

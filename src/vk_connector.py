@@ -13,6 +13,7 @@ class VkConnectorException(ValueError):
 
 
 class VkConnector:
+    NAME = 'vk'
 
     def __init__(self, config):
         try:

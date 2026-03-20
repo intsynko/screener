@@ -23,29 +23,24 @@ def init_processor():
         raise ValueError('Ошибка в настройки конфиг файла')
     else:
         try:
-            messenger = config.get('messenger', 'telegram')
-
-            tg_connector = TelegramConnector(config)
-
-            if messenger == 'vk':
-                messenger_connector = VkConnector(config)
-                printer_key = 'vk'
+            screener = config.get('screener', 'telegram')
+            if screener == 'vk':
+                screener_connector = VkConnector(config)
+            elif screener == 'telegram':
+                screener_connector = TelegramConnector(config)
             else:
-                messenger_connector = tg_connector
-                printer_key = config.get('printer', 'telegram')
+                raise NotImplementedError("Неизвестный screener")
 
             printer = {
                 'console': ConsolePrinter,
                 'telegram': TelegramPrinter,
                 'vk': VkPrinter,
                 'window': WindowPrinter,
-            }[printer_key](
+            }[config.get('printer', 'telegram')](
                 config,
                 level=Level.INFO,
-                tg_connector=tg_connector,
-                vk_connector=messenger_connector if messenger == 'vk' else None,
             )
-            return Processor(config, printer, tg_connector, messenger_connector)
+            return Processor(config, printer, screener_connector)
         except ValueError:
             raise
 

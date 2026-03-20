@@ -14,3 +14,9 @@
         - shutdown_enabled - (bool) можно ли выключать через команды 
 - v_4:
     - compression - (bool: true, false) - сжимать ли скрины при отправлении в телеграмм (по дефолту true)
+- v_5:
+    - printer - (str) куда слать логи работы (console, telegram, window, vk)
+    - screener - (str) куда слать скрины (telegram, vk)
+    - vk
+      - token - (str) токен бота (в формате vk1.a.XXXXXXXXXXXXXX...)
+      - peer_id - (str) peer чата в VK (если создавали чат в сообществе, то 2000000001)

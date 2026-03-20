@@ -4,8 +4,8 @@ from telegram_connector import TelegramConnector
 
 class TelegramPrinter(BasePrinter):
 
-    def __init__(self, config, level, tg_connector: TelegramConnector, **kwargs):
-        self.tg_connector = tg_connector
+    def __init__(self, config, level, **kwargs):
+        self.tg_connector = TelegramConnector(config)
         super().__init__(config, level)
 
     def _print(self, msg, level):

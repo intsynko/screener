@@ -11,23 +11,26 @@ from telegram_connector import TelegramConnectorException
 
 class Processor:
 
-    def __init__(self, config, printer, tg_connector, messenger_connector):
+    def __init__(self, config, printer, screener_connector):
         self.max_time = int(config.get("max_time", 60))
         self.push_message_btn = int(config.get("push_message_btn", 4))
         self.exit_btn_code = int(config.get("exit_btn_code", 9))
         commands_settings = config.get("commands_settings", {})
 
         self.printer = printer
-        self.tg_connector = tg_connector
-        self.messenger_connector = messenger_connector
-        self.commands_executor = CommandsExecutor(tg_connector, printer, processor=self, config=commands_settings)
+        self.screener_connector = screener_connector
+        if screener_connector.NAME == 'telegram':
+            self.commands_executor = CommandsExecutor(screener_connector, printer, processor=self, config=commands_settings)
+        else:
+            self.commands_executor = None
 
         self._started = None
         self._5_minute_notified = False
 
     def run_loop(self):
         self.greetings()
-        self.commands_executor.set_commands()
+        if self.commands_executor:
+            self.commands_executor.set_commands()
         self._started = time.time()
 
         state_left = win32api.GetKeyState(self.push_message_btn)
@@ -39,13 +42,14 @@ class Processor:
                 if scroll_btn < 0:
                     screenshot = self.make_screenshot()
                     try:
-                        self.messenger_connector.send_pic(screenshot)
+                        self.screener_connector.send_pic(screenshot)
                     except Exception as ex:
                         self.printer.print_msg(ex, level=Level.ERROR)
                     else:
                         self.printer.print_msg(time.time() - self._started, level=Level.DEBUG)
             self.notify()
-            self.commands_executor.check_commands()
+            if self.commands_executor:
+                self.commands_executor.check_commands()
             if self.check_exit():
                 break
         self.buy()
@@ -89,6 +93,6 @@ class Processor:
     def buy(self):
         self.printer.print_msg("""
         Завершаю работу! Надеюсь помог 😇
-        Отзывы: @intsyn
+        Отзывы: https://t.me//@intsyn
         Ставьте звезду в репозиторий: https://github.com/intsynko/screener
         """)

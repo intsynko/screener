@@ -1,0 +1,8 @@
+{
+  "screener": "vk",
+  "printer": "vk",
+  "vk": {
+    "token": "vk1.a.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+    "peer_id": 2000000001
+  }
+}

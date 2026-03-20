@@ -8,6 +8,7 @@ class TelegramConnectorException(ValueError):
 
 
 class TelegramConnector:
+    NAME = 'telegram'
     url = "https://api.telegram.org/bot"
 
     def __init__(self, config):
