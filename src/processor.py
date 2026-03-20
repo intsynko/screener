@@ -11,7 +11,7 @@ from telegram_connector import TelegramConnectorException
 
 class Processor:
 
-    def __init__(self, config, printer, tg_connector):
+    def __init__(self, config, printer, tg_connector, messenger_connector):
         self.max_time = int(config.get("max_time", 60))
         self.push_message_btn = int(config.get("push_message_btn", 4))
         self.exit_btn_code = int(config.get("exit_btn_code", 9))
@@ -19,6 +19,7 @@ class Processor:
 
         self.printer = printer
         self.tg_connector = tg_connector
+        self.messenger_connector = messenger_connector
         self.commands_executor = CommandsExecutor(tg_connector, printer, processor=self, config=commands_settings)
 
         self._started = None
@@ -38,8 +39,8 @@ class Processor:
                 if scroll_btn < 0:
                     screenshot = self.make_screenshot()
                     try:
-                        self.tg_connector.send_pic(screenshot)
-                    except TelegramConnectorException as ex:
+                        self.messenger_connector.send_pic(screenshot)
+                    except Exception as ex:
                         self.printer.print_msg(ex, level=Level.ERROR)
                     else:
                         self.printer.print_msg(time.time() - self._started, level=Level.DEBUG)

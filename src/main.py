@@ -6,10 +6,12 @@ import pyautogui
 
 from printers.console import ConsolePrinter
 from printers.tg_printer import TelegramPrinter
+from printers.vk_printer import VkPrinter
 from printers.window import WindowPrinter
 from processor import Processor
 from printers.base_printer import Level
 from telegram_connector import TelegramConnector
+from vk_connector import VkConnector
 
 
 def init_processor():
@@ -21,17 +23,29 @@ def init_processor():
         raise ValueError('Ошибка в настройки конфиг файла')
     else:
         try:
+            messenger = config.get('messenger', 'telegram')
+
             tg_connector = TelegramConnector(config)
+
+            if messenger == 'vk':
+                messenger_connector = VkConnector(config)
+                printer_key = 'vk'
+            else:
+                messenger_connector = tg_connector
+                printer_key = config.get('printer', 'telegram')
+
             printer = {
                 'console': ConsolePrinter,
                 'telegram': TelegramPrinter,
+                'vk': VkPrinter,
                 'window': WindowPrinter,
-            }[config.get('printer', 'telegram')](
+            }[printer_key](
                 config,
                 level=Level.INFO,
-                tg_connector=tg_connector
+                tg_connector=tg_connector,
+                vk_connector=messenger_connector if messenger == 'vk' else None,
             )
-            return Processor(config, printer, tg_connector)
+            return Processor(config, printer, tg_connector, messenger_connector)
         except ValueError:
             raise
 
