@@ -1,6 +1,6 @@
 {
   "repo": "intsynko/screener",
-  "branch": "master",
+  "branch": "main",
   "instructions": {
     "telegram_bot": {
       "title": "Как настроить Telegram бота",

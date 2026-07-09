@@ -383,7 +383,25 @@ function getSelectedVersionMeta() {
 function getBuildDownloadUrl() {
   const meta = getSelectedVersionMeta();
   if (!meta?.buildFile) return null;
-  return `https://github.com/${schema.repo}/raw/${schema.branch}/${meta.buildFile}`;
+
+  const branch = schema.branch || 'main';
+
+  if (window.location.protocol !== 'file:') {
+    const relativeUrl = new URL(`../../${meta.buildFile}`, window.location.href).href;
+    if (window.location.hostname.endsWith('github.io')) {
+      return relativeUrl;
+    }
+  }
+
+  return `https://raw.githubusercontent.com/${schema.repo}/${branch}/${meta.buildFile}`;
+}
+
+function isSameOriginDownload(url) {
+  try {
+    return new URL(url).origin === window.location.origin;
+  } catch {
+    return false;
+  }
 }
 
 function updateBuildHint() {
@@ -399,7 +417,7 @@ function updateBuildHint() {
   const filename = meta.buildFile.split('/').pop();
   downloadMainBtn.disabled = false;
   downloadMainBtn.textContent = `Скачать ${filename}`;
-  buildHint.textContent = `Ссылка на файл в репозитории: ${meta.buildFile}`;
+  buildHint.textContent = url;
 }
 
 function onDownloadConfig() {
@@ -419,10 +437,17 @@ function onDownloadMain() {
   const filename = meta.buildFile.split('/').pop();
   const link = document.createElement('a');
   link.href = url;
-  link.download = filename;
-  link.target = '_blank';
   link.rel = 'noopener noreferrer';
+
+  if (isSameOriginDownload(url)) {
+    link.download = filename;
+  } else {
+    link.target = '_blank';
+  }
+
+  document.body.appendChild(link);
   link.click();
+  link.remove();
 }
 
 async function onCopyPreview() {

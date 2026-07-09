@@ -30,4 +30,4 @@ alwaysApply: false
 
 - Открыть `pages/config-generator/index.html` через локальный HTTP-сервер.
 - Выбрать новую версию, убедиться что форма и предпросмотр `config.json` корректны.
-- Кнопка скачивания программы указывает на `builds/v_N/main.exe`.
+- Кнопка скачивания программы указывает на `builds/v_N/main.exe` (ветка `main` в `schema.json`).
