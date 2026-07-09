@@ -294,6 +294,26 @@ body {
   color: var(--text-muted);
 }
 
+.footer__thanks {
+  display: inline-flex;
+  margin-top: 1rem;
+  text-decoration: none;
+}
+
+.btn--thanks {
+  padding: 0.5rem 1rem;
+  background: rgba(34, 197, 94, 0.15);
+  color: #86efac;
+  border: 1px solid rgba(34, 197, 94, 0.35);
+  font-size: 0.85rem;
+}
+
+.btn--thanks:hover {
+  background: rgba(34, 197, 94, 0.25);
+  border-color: rgba(34, 197, 94, 0.5);
+  text-decoration: none;
+}
+
 .footer a {
   color: #93c5fd;
   text-decoration: none;
