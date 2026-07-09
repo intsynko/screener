@@ -284,6 +284,16 @@ body {
   font-size: 0.85rem;
 }
 
+.footer__links,
+.footer__feedback {
+  margin: 0;
+}
+
+.footer__feedback {
+  margin-top: 0.5rem;
+  color: var(--text-muted);
+}
+
 .footer a {
   color: #93c5fd;
   text-decoration: none;
