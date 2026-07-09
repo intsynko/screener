@@ -22,6 +22,8 @@ const importApplyBtn = document.getElementById('import-apply');
 let schema = null;
 let keycodes = [];
 
+const STORAGE_KEY = 'screener-config-generator-state';
+
 function parseVersionNumber(versionId) {
   const match = /^v_(\d+)$/.exec(versionId);
   return match ? Number(match[1]) : 0;
@@ -434,6 +436,32 @@ function onDownloadConfig() {
   }
   const config = buildConfigObject();
   downloadBlob('config.json', JSON.stringify(config, null, 2) + '\n', 'application/json');
+  saveFormState();
+}
+
+function saveFormState() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      versionId: versionSelect.value,
+      values: getFormValues(),
+    }));
+  } catch {
+    // localStorage недоступен или переполнен — не мешаем скачиванию
+  }
+}
+
+function restoreFormState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+
+    const saved = JSON.parse(raw);
+    if (!saved.values || typeof saved.values !== 'object') return;
+
+    loadFormState(saved.versionId, saved.values);
+  } catch {
+    localStorage.removeItem(STORAGE_KEY);
+  }
 }
 
 function onDownloadMain() {
@@ -573,6 +601,15 @@ async function onImportFromClipboard() {
   }
 }
 
+function loadFormState(versionId, values) {
+  const versionExists = schema.versions.some((version) => version.id === versionId);
+  versionSelect.value = versionExists ? versionId : inferVersionFromConfig(values);
+  const meta = getSelectedVersionMeta();
+  versionDescription.textContent = meta?.description || '';
+  renderForm();
+  applyConfigToForm(values);
+}
+
 function onImportApply() {
   const raw = importTextarea.value.trim();
   if (!raw) {
@@ -594,11 +631,8 @@ function onImportApply() {
   }
 
   const versionId = inferVersionFromConfig(config);
-  versionSelect.value = versionId;
-  const meta = getSelectedVersionMeta();
-  versionDescription.textContent = meta?.description || '';
-  renderForm();
-  applyConfigToForm(config);
+  loadFormState(versionId, config);
+  saveFormState();
   importDialog.close();
 }
 
@@ -613,6 +647,7 @@ async function init() {
 
   populateVersionSelect();
   renderForm();
+  restoreFormState();
 
   versionSelect.addEventListener('change', onVersionChange);
   downloadConfigBtn.addEventListener('click', onDownloadConfig);
