@@ -368,6 +368,54 @@ body {
   margin-bottom: 0;
 }
 
+.btn--block {
+  width: 100%;
+  margin-top: 0.75rem;
+}
+
+.import-dialog__hint {
+  margin: 0 0 0.75rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.import-dialog__textarea {
+  width: 100%;
+  margin-bottom: 0.75rem;
+  padding: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #0b1020;
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  line-height: 1.45;
+  resize: vertical;
+}
+
+.import-dialog__textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+.import-dialog__error {
+  margin: 0 0 0.75rem;
+  font-size: 0.85rem;
+  color: var(--danger);
+}
+
+.import-dialog__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.import-dialog__actions .btn--ghost {
+  margin-right: auto;
+}
+
 .help-dialog__close {
   width: 100%;
 }

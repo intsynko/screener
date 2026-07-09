@@ -11,6 +11,13 @@ const helpDialog = document.getElementById('help-dialog');
 const helpDialogTitle = document.getElementById('help-dialog-title');
 const helpDialogContent = document.getElementById('help-dialog-content');
 const helpDialogClose = document.getElementById('help-dialog-close');
+const importConfigBtn = document.getElementById('import-config');
+const importDialog = document.getElementById('import-dialog');
+const importTextarea = document.getElementById('import-textarea');
+const importError = document.getElementById('import-error');
+const importFromClipboardBtn = document.getElementById('import-from-clipboard');
+const importCancelBtn = document.getElementById('import-cancel');
+const importApplyBtn = document.getElementById('import-apply');
 
 let schema = null;
 let keycodes = [];
@@ -489,6 +496,112 @@ function onVersionChange() {
   renderForm();
 }
 
+function inferVersionFromConfig(config) {
+  let minVersion = 1;
+  if (config.bot_token != null || config.chat_id != null) minVersion = Math.max(minVersion, 1);
+  if (config.push_message_btn != null || config.exit_btn_code != null || config.printer != null) {
+    minVersion = Math.max(minVersion, 2);
+  }
+  if (config.commands_settings != null) minVersion = Math.max(minVersion, 3);
+  if ('compression' in config) minVersion = Math.max(minVersion, 4);
+  if (config.screener != null || config.vk != null) minVersion = Math.max(minVersion, 5);
+
+  const matching = schema.versions.filter(
+    (version) => parseVersionNumber(version.id) >= minVersion,
+  );
+  return matching[matching.length - 1]?.id || schema.versions[schema.versions.length - 1].id;
+}
+
+function setFieldValue(element, value) {
+  if (value === undefined || value === null) return;
+
+  if (element.type === 'checkbox') {
+    element.checked = Boolean(value);
+    return;
+  }
+
+  const strValue = String(value);
+  if (element.tagName === 'SELECT') {
+    const hasOption = [...element.options].some((option) => option.value === strValue);
+    if (hasOption) element.value = strValue;
+    return;
+  }
+
+  element.value = strValue;
+}
+
+function applyConfigToForm(config) {
+  const priorityKeys = ['screener', 'printer'];
+
+  priorityKeys.forEach((key) => {
+    const element = configForm.querySelector(`[data-key="${key}"]`);
+    if (element) setFieldValue(element, getNestedValue(config, key));
+  });
+
+  updateBlockVisibility();
+
+  configForm.querySelectorAll('[data-key]').forEach((element) => {
+    if (element.closest('.hidden')) return;
+
+    const key = element.dataset.key;
+    if (priorityKeys.includes(key)) return;
+
+    setFieldValue(element, getNestedValue(config, key));
+  });
+
+  updateBlockVisibility();
+}
+
+function showImportError(message) {
+  importError.textContent = message;
+  importError.classList.toggle('hidden', !message);
+}
+
+function openImportDialog() {
+  importTextarea.value = '';
+  showImportError('');
+  importDialog.showModal();
+  importTextarea.focus();
+}
+
+async function onImportFromClipboard() {
+  try {
+    importTextarea.value = await navigator.clipboard.readText();
+    showImportError('');
+  } catch {
+    showImportError('Не удалось прочитать буфер обмена — вставьте JSON вручную (Ctrl+V).');
+  }
+}
+
+function onImportApply() {
+  const raw = importTextarea.value.trim();
+  if (!raw) {
+    showImportError('Вставьте JSON конфига.');
+    return;
+  }
+
+  let config;
+  try {
+    config = JSON.parse(raw);
+  } catch {
+    showImportError('Некорректный JSON. Проверьте скобки и кавычки.');
+    return;
+  }
+
+  if (!config || typeof config !== 'object' || Array.isArray(config)) {
+    showImportError('Конфиг должен быть JSON-объектом.');
+    return;
+  }
+
+  const versionId = inferVersionFromConfig(config);
+  versionSelect.value = versionId;
+  const meta = getSelectedVersionMeta();
+  versionDescription.textContent = meta?.description || '';
+  renderForm();
+  applyConfigToForm(config);
+  importDialog.close();
+}
+
 async function init() {
   const [schemaResponse, keycodesResponse] = await Promise.all([
     fetch('schema.json'),
@@ -506,6 +619,13 @@ async function init() {
   downloadMainBtn.addEventListener('click', onDownloadMain);
   refreshPreviewBtn.addEventListener('click', updatePreview);
   copyPreviewBtn.addEventListener('click', onCopyPreview);
+  importConfigBtn.addEventListener('click', openImportDialog);
+  importFromClipboardBtn.addEventListener('click', onImportFromClipboard);
+  importCancelBtn.addEventListener('click', () => importDialog.close());
+  importApplyBtn.addEventListener('click', onImportApply);
+  importDialog.addEventListener('click', (event) => {
+    if (event.target === importDialog) importDialog.close();
+  });
   helpDialogClose.addEventListener('click', () => helpDialog.close());
   helpDialog.addEventListener('click', (event) => {
     if (event.target === helpDialog) {

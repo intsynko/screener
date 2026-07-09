@@ -24,6 +24,9 @@
           <select id="version-select" class="field__control"></select>
         </label>
         <p id="version-description" class="version-description"></p>
+        <button type="button" id="import-config" class="btn btn--secondary btn--block">
+          Вставить свой конфиг
+        </button>
       </section>
 
       <form id="config-form" class="form" novalidate></form>
@@ -56,6 +59,20 @@
       </a>
     </footer>
   </div>
+
+  <dialog id="import-dialog" class="help-dialog import-dialog">
+    <div class="help-dialog__inner">
+      <h3 class="help-dialog__title">Вставить config.json</h3>
+      <p class="import-dialog__hint">Вставьте содержимое вашего config.json — форма заполнится автоматически.</p>
+      <textarea id="import-textarea" class="import-dialog__textarea" rows="12" spellcheck="false" placeholder='{"bot_token": "...", "chat_id": "..."}'></textarea>
+      <p id="import-error" class="import-dialog__error hidden" role="alert"></p>
+      <div class="import-dialog__actions">
+        <button type="button" id="import-from-clipboard" class="btn btn--ghost">Из буфера</button>
+        <button type="button" id="import-cancel" class="btn btn--secondary">Отмена</button>
+        <button type="button" id="import-apply" class="btn btn--primary">Применить</button>
+      </div>
+    </div>
+  </dialog>
 
   <dialog id="help-dialog" class="help-dialog">
     <div class="help-dialog__inner">
