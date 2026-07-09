@@ -1,0 +1,273 @@
+{
+  "repo": "intsynko/screener",
+  "branch": "master",
+  "instructions": {
+    "telegram_bot": {
+      "title": "Как настроить Telegram бота",
+      "steps": [
+        "Написать @BotFather: /newbot",
+        "Ввести имя и логин нового бота",
+        "Получить от @BotFather токен бота",
+        "Создать чат (не канал) и добавить в него бота",
+        "Узнать chat_id: добавить в чат @get_my_chat_id_bot — он сразу напечатает id",
+        "Либо открыть в браузере https://api.telegram.org/bot<TOKEN>/getUpdates и найти \"chat\" → \"id\"",
+        "После изменения количества участников чата chat_id может измениться"
+      ]
+    },
+    "vk_token": {
+      "title": "Как настроить бота ВКонтакте",
+      "steps": [
+        "Создать сообщество ВКонтакте (Сообщества → Создать сообщество)",
+        "Управление → Дополнительно → Работа с API → Создать ключ — токен с правами на сообщения и фотографии",
+        "Управление → Чаты → Создать чат",
+        "По клику на чат скопировать ссылку вступления https://vk.me/join/XXXXXXXXXXXXXXXXXXXX= и вступить в чат",
+        "peer_id первого чата сообщества — 2000000001"
+      ]
+    }
+  },
+  "versions": [
+    {
+      "id": "v_0",
+      "label": "v_0 — ранняя сборка",
+      "description": "Telegram, базовые поля + max_time и exit_btn_code",
+      "buildFile": "builds/v_0/main.exe"
+    },
+    {
+      "id": "v_1",
+      "label": "v_1",
+      "description": "Telegram: bot_token, chat_id, max_time",
+      "buildFile": "builds/v_1/main.exe"
+    },
+    {
+      "id": "v_2",
+      "label": "v_2",
+      "description": "+ exit_btn_code, printer, push_message_btn",
+      "buildFile": "builds/v_2/main.exe"
+    },
+    {
+      "id": "v_3",
+      "label": "v_3",
+      "description": "+ commands_settings (команды в Telegram)",
+      "buildFile": "builds/v_3/main.exe"
+    },
+    {
+      "id": "v_4",
+      "label": "v_4",
+      "description": "+ compression (сжатие скринов)",
+      "buildFile": "builds/v_4/main.exe"
+    },
+    {
+      "id": "v_5",
+      "label": "v_5",
+      "description": "+ VK, выбор screener/printer",
+      "buildFile": "builds/v_5/main.exe"
+    },
+    {
+      "id": "v_6",
+      "label": "v_6 — текущая",
+      "description": "Актуальная версия (Telegram + VK)",
+      "buildFile": "builds/v_6/main.exe"
+    }
+  ],
+  "blocks": [
+    {
+      "id": "messenger",
+      "title": "Мессенджер",
+      "minVersion": 5,
+      "fields": [
+        {
+          "key": "screener",
+          "label": "screener",
+          "type": "select",
+          "options": [
+            { "value": "telegram", "label": "Telegram" },
+            { "value": "vk", "label": "ВКонтакте" }
+          ],
+          "default": "telegram",
+          "hint": "Куда отправлять скриншоты"
+        },
+        {
+          "key": "printer",
+          "label": "printer",
+          "type": "select",
+          "options": [
+            { "value": "telegram", "label": "Telegram" },
+            { "value": "vk", "label": "ВКонтакте" },
+            { "value": "console", "label": "console" },
+            { "value": "window", "label": "window" }
+          ],
+          "default": "telegram",
+          "hint": "Куда писать логи работы программы"
+        }
+      ]
+    },
+    {
+      "id": "telegram",
+      "title": "Telegram",
+      "maxVersion": 4,
+      "fields": [
+        {
+          "key": "bot_token",
+          "label": "bot_token",
+          "type": "text",
+          "required": true,
+          "placeholder": "0000000000:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+          "hint": "Токен бота от @BotFather",
+          "help": "telegram_bot"
+        },
+        {
+          "key": "chat_id",
+          "label": "chat_id",
+          "type": "text",
+          "required": true,
+          "placeholder": "-1000000000000",
+          "hint": "ID чата (может быть отрицательным)"
+        }
+      ]
+    },
+    {
+      "id": "telegram_v5",
+      "title": "Telegram",
+      "minVersion": 5,
+      "showWhenProvider": "telegram",
+      "fields": [
+        {
+          "key": "bot_token",
+          "label": "bot_token",
+          "type": "text",
+          "required": true,
+          "placeholder": "0000000000:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+          "hint": "Токен бота от @BotFather",
+          "help": "telegram_bot"
+        },
+        {
+          "key": "chat_id",
+          "label": "chat_id",
+          "type": "text",
+          "required": true,
+          "placeholder": "-1000000000000",
+          "hint": "ID чата (может быть отрицательным)"
+        }
+      ]
+    },
+    {
+      "id": "vk",
+      "title": "ВКонтакте",
+      "minVersion": 5,
+      "showWhenProvider": "vk",
+      "fields": [
+        {
+          "key": "vk.token",
+          "label": "vk.token",
+          "type": "text",
+          "required": true,
+          "placeholder": "vk1.a.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+          "hint": "Токен сообщества с правами на сообщения",
+          "help": "vk_token"
+        },
+        {
+          "key": "vk.peer_id",
+          "label": "vk.peer_id",
+          "type": "number",
+          "required": true,
+          "default": 2000000001,
+          "hint": "peer_id беседы (первый чат сообщества — 2000000001)"
+        }
+      ]
+    },
+    {
+      "id": "runtime",
+      "title": "Работа программы",
+      "fields": [
+        {
+          "key": "max_time",
+          "label": "max_time",
+          "type": "number",
+          "minVersion": 0,
+          "default": 60,
+          "hint": "Максимальное время работы в минутах"
+        },
+        {
+          "key": "push_message_btn",
+          "label": "push_message_btn",
+          "type": "keyselect",
+          "minVersion": 2,
+          "default": 4,
+          "hint": "Клавиша отправки скрина"
+        },
+        {
+          "key": "exit_btn_code",
+          "label": "exit_btn_code",
+          "type": "keyselect",
+          "minVersion": 0,
+          "default": 9,
+          "hint": "Клавиша выхода из программы"
+        }
+      ]
+    },
+    {
+      "id": "printer_v2",
+      "title": "Уведомления",
+      "minVersion": 2,
+      "maxVersion": 4,
+      "fields": [
+        {
+          "key": "printer",
+          "label": "printer",
+          "type": "select",
+          "options": [
+            { "value": "telegram", "label": "Telegram" },
+            { "value": "console", "label": "console" },
+            { "value": "window", "label": "window" }
+          ],
+          "default": "telegram",
+          "hint": "Куда выводить логи"
+        }
+      ]
+    },
+    {
+      "id": "commands",
+      "title": "Команды (Telegram)",
+      "minVersion": 3,
+      "showWhen": { "screener": "telegram" },
+      "fields": [
+        {
+          "key": "commands_settings.enabled",
+          "label": "commands_settings.enabled",
+          "type": "checkbox",
+          "default": true,
+          "hint": "Включить команды в Telegram"
+        },
+        {
+          "key": "commands_settings.shutdown_enabled",
+          "label": "commands_settings.shutdown_enabled",
+          "type": "checkbox",
+          "default": true,
+          "hint": "Разрешить выключение через /shutdown"
+        },
+        {
+          "key": "commands_settings.pull_delay",
+          "label": "commands_settings.pull_delay",
+          "type": "number",
+          "default": 3,
+          "hint": "Интервал опроса команд (секунды)"
+        }
+      ]
+    },
+    {
+      "id": "compression",
+      "title": "Сжатие",
+      "minVersion": 4,
+      "showWhen": { "screener": "telegram" },
+      "fields": [
+        {
+          "key": "compression",
+          "label": "compression",
+          "type": "checkbox",
+          "default": true,
+          "hint": "Сжимать скрины при отправке в Telegram"
+        }
+      ]
+    }
+  ]
+}

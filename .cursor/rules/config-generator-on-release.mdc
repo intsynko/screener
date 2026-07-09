@@ -1,0 +1,33 @@
+---
+description: Обновлять генератор config.json при выпуске новой сборки screener
+globs: builds/**,pages/config-generator/**,docs/all_settings.md
+alwaysApply: false
+---
+
+# Генератор конфигов при новой сборке
+
+При добавлении или выпуске новой версии скринера (`builds/v_N/`) **обязательно** синхронизировать веб-генератор `pages/config-generator/`.
+
+## Чеклист
+
+1. **`docs/all_settings.md`** — описать новые поля конфига для версии `v_N`.
+2. **`pages/config-generator/schema.json`**:
+   - добавить версию в массив `versions` (`id`, `label`, `description`, `buildFile`);
+   - добавить или обновить блоки/поля в `blocks` с нужным `minVersion`;
+   - при новых инструкциях — секция `instructions`.
+3. **`builds/v_N/config.json`** — пример конфига (без реальных токенов).
+4. **`builds/v_N/README.md`** — инструкция по настройке для этой сборки.
+5. При изменении списка клавиш — **`pages/config-generator/keycodes.json`**.
+
+## Правила схемы
+
+- Поля накапливаются по версиям: `v_N` включает настройки `v_{N-1}`.
+- `showWhenProvider: "telegram"` / `"vk"` — блок показывается, если провайдер выбран в `screener` **или** `printer`.
+- `showWhen: { "screener": "telegram" }` — только для функций, завязанных на screener (команды, compression).
+- `push_message_btn` и `exit_btn_code` — тип `keyselect`, не `number`.
+
+## Проверка
+
+- Открыть `pages/config-generator/index.html` через локальный HTTP-сервер.
+- Выбрать новую версию, убедиться что форма и предпросмотр `config.json` корректны.
+- Кнопка скачивания программы указывает на `builds/v_N/main.exe`.

@@ -1,0 +1,377 @@
+:root {
+  --bg: #0f1419;
+  --bg-card: #1a2332;
+  --bg-input: #111827;
+  --border: #2d3a4f;
+  --text: #e8edf4;
+  --text-muted: #8b9cb3;
+  --accent: #3b82f6;
+  --accent-hover: #2563eb;
+  --success: #22c55e;
+  --danger: #ef4444;
+  --radius: 12px;
+  --shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+  --font: "Segoe UI", system-ui, -apple-system, sans-serif;
+  --mono: "Cascadia Code", "Consolas", "Courier New", monospace;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font);
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(59, 130, 246, 0.18), transparent),
+    var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+}
+
+.page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 3rem;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.header__badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  background: rgba(59, 130, 246, 0.15);
+  color: #93c5fd;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+}
+
+.header h1 {
+  margin: 0 0 0.5rem;
+  font-size: clamp(1.75rem, 4vw, 2.25rem);
+  font-weight: 700;
+}
+
+.header__lead {
+  margin: 0 auto;
+  max-width: 560px;
+  color: var(--text-muted);
+}
+
+.layout {
+  display: grid;
+  gap: 1.25rem;
+}
+
+@media (min-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+
+  .card--version,
+  .form {
+    grid-column: 1;
+  }
+
+  .card--preview {
+    grid-column: 2;
+    grid-row: 1 / span 10;
+    position: sticky;
+    top: 1.25rem;
+  }
+}
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  box-shadow: var(--shadow);
+}
+
+.card h2 {
+  margin: 0 0 1rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.version-description {
+  margin: 0.75rem 0 0;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.form {
+  display: grid;
+  gap: 1rem;
+}
+
+.block {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  box-shadow: var(--shadow);
+}
+
+.block__title {
+  margin: 0 0 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #cbd5e1;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 0.9rem;
+}
+
+.field:last-child {
+  margin-bottom: 0;
+}
+
+.field__label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #cbd5e1;
+}
+
+.field__control {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-input);
+  color: var(--text);
+  font: inherit;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.field__control:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+.field__control--invalid {
+  border-color: var(--danger);
+}
+
+.field__hint {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.field--checkbox {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.field--checkbox .field__control {
+  width: auto;
+  accent-color: var(--accent);
+}
+
+.preview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.preview-header h2 {
+  margin: 0;
+}
+
+.json-preview {
+  margin: 0 0 1rem;
+  padding: 1rem;
+  min-height: 220px;
+  max-height: 420px;
+  overflow: auto;
+  border-radius: 8px;
+  background: #0b1020;
+  border: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.65rem 1.1rem;
+  border: none;
+  border-radius: 8px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn--primary {
+  background: var(--accent);
+  color: #fff;
+}
+
+.btn--primary:hover {
+  background: var(--accent-hover);
+}
+
+.btn--secondary {
+  background: #243044;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.btn--secondary:hover {
+  background: #2d3d56;
+}
+
+.btn--ghost {
+  padding: 0.4rem 0.75rem;
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  font-size: 0.85rem;
+}
+
+.btn--ghost:hover {
+  color: var(--text);
+  border-color: #4b607d;
+}
+
+.build-hint {
+  margin: 0.75rem 0 0;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.footer {
+  margin-top: 2rem;
+  text-align: center;
+  font-size: 0.85rem;
+}
+
+.footer a {
+  color: #93c5fd;
+  text-decoration: none;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+
+.field__label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.field--checkbox .field__label-row {
+  flex: 1;
+}
+
+.btn-help {
+  flex-shrink: 0;
+  padding: 0.15rem 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: transparent;
+  color: #93c5fd;
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-help:hover {
+  background: rgba(59, 130, 246, 0.12);
+  border-color: #4b607d;
+}
+
+.preview-header__actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.help-dialog {
+  width: min(520px, calc(100vw - 2rem));
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-card);
+  color: var(--text);
+  box-shadow: var(--shadow);
+}
+
+.help-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.help-dialog__inner {
+  padding: 1.25rem;
+}
+
+.help-dialog__title {
+  margin: 0 0 1rem;
+  font-size: 1.05rem;
+}
+
+.help-dialog__content {
+  margin-bottom: 1.25rem;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.help-steps {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+.help-steps li {
+  margin-bottom: 0.5rem;
+}
+
+.help-steps li:last-child {
+  margin-bottom: 0;
+}
+
+.help-dialog__close {
+  width: 100%;
+}
+
+.hidden {
+  display: none !important;
+}

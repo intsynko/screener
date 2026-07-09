@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Screener — генератор config.json</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="page">
+    <header class="header">
+      <div class="header__badge">screener</div>
+      <h1>Генератор config.json</h1>
+      <p class="header__lead">
+        Заполните форму под нужную версию скринера и скачайте готовый конфиг рядом с программой.
+      </p>
+    </header>
+
+    <main class="layout">
+      <section class="card card--version">
+        <h2>Версия скринера</h2>
+        <label class="field">
+          <span class="field__label">Сборка</span>
+          <select id="version-select" class="field__control"></select>
+        </label>
+        <p id="version-description" class="version-description"></p>
+      </section>
+
+      <form id="config-form" class="form" novalidate></form>
+
+      <section class="card card--preview">
+        <div class="preview-header">
+          <h2>Предпросмотр</h2>
+          <div class="preview-header__actions">
+            <button type="button" id="copy-preview" class="btn btn--ghost">Копировать</button>
+            <button type="button" id="refresh-preview" class="btn btn--ghost">Обновить</button>
+          </div>
+        </div>
+        <pre id="json-preview" class="json-preview" aria-live="polite"></pre>
+
+        <div class="actions">
+          <button type="button" id="download-config" class="btn btn--primary">
+            Скачать config.json
+          </button>
+          <button type="button" id="download-main" class="btn btn--secondary">
+            Скачать программу
+          </button>
+        </div>
+        <p id="build-hint" class="build-hint"></p>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <a href="https://github.com/intsynko/screener" target="_blank" rel="noopener noreferrer">
+        Репозиторий на GitHub
+      </a>
+    </footer>
+  </div>
+
+  <dialog id="help-dialog" class="help-dialog">
+    <div class="help-dialog__inner">
+      <h3 id="help-dialog-title" class="help-dialog__title"></h3>
+      <div id="help-dialog-content" class="help-dialog__content"></div>
+      <button type="button" id="help-dialog-close" class="btn btn--primary help-dialog__close">
+        Понятно
+      </button>
+    </div>
+  </dialog>
+
+  <script src="app.js" type="module"></script>
+</body>
+</html>
