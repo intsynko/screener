@@ -58,6 +58,8 @@ function parseControlValue(element) {
 function getFormValues() {
   const values = {};
   configForm.querySelectorAll('[data-key]').forEach((element) => {
+    if (element.closest('.hidden')) return;
+
     const key = element.dataset.key;
     if (!key) return;
 
@@ -242,6 +244,8 @@ function renderForm() {
   configForm.replaceChildren();
 
   schema.blocks.forEach((block) => {
+    if (!blockMatchesVersion(block, versionNum)) return;
+
     const visibleFields = block.fields.filter((field) => fieldMatchesVersion(field, versionNum));
     if (!visibleFields.length) return;
 
@@ -262,15 +266,16 @@ function renderForm() {
   });
 
   updateBlockVisibility();
-  updatePreview();
   updateBuildHint();
 }
 
 function updateBlockVisibility() {
   configForm.querySelectorAll('.block').forEach((section) => {
     const block = schema.blocks.find((item) => item.id === section.dataset.blockId);
-    section.classList.toggle('hidden', !block || !shouldShowBlock(block));
+    const visible = block && shouldShowBlock(block);
+    section.classList.toggle('hidden', !visible);
   });
+  updatePreview();
 }
 
 function buildConfigObject() {
@@ -359,7 +364,6 @@ function validateForm() {
 
 function onFormChange() {
   updateBlockVisibility();
-  updatePreview();
 }
 
 function downloadBlob(filename, content, mimeType) {
