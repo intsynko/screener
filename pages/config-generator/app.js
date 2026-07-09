@@ -172,16 +172,17 @@ function createFieldElement(field) {
   wrapper.className = field.type === 'checkbox' ? 'field field--checkbox' : 'field';
   wrapper.dataset.keyWrapper = field.key;
 
-  const labelRow = document.createElement('div');
-  labelRow.className = 'field__label-row';
+  const descriptionRow = document.createElement('div');
+  descriptionRow.className = 'field__description-row';
 
-  const label = document.createElement('span');
-  label.className = 'field__label';
-  label.textContent = field.label;
-  labelRow.appendChild(label);
+  const descriptionText = field.description || field.hint || field.key;
+  const description = document.createElement('span');
+  description.className = 'field__description';
+  description.textContent = descriptionText;
+  descriptionRow.appendChild(description);
 
   if (field.help) {
-    labelRow.appendChild(createHelpButton(field.help));
+    descriptionRow.appendChild(createHelpButton(field.help));
   }
 
   let control;
@@ -217,7 +218,7 @@ function createFieldElement(field) {
     control.className = 'field__control';
     control.checked = Boolean(field.default);
     wrapper.appendChild(control);
-    wrapper.appendChild(labelRow);
+    wrapper.appendChild(descriptionRow);
   } else {
     control = document.createElement('input');
     control.className = 'field__control';
@@ -228,18 +229,12 @@ function createFieldElement(field) {
   }
 
   control.dataset.key = field.key;
+  control.setAttribute('aria-label', descriptionText);
   if (field.required) control.required = true;
 
   if (field.type !== 'checkbox') {
-    wrapper.appendChild(labelRow);
+    wrapper.appendChild(descriptionRow);
     wrapper.appendChild(control);
-  }
-
-  if (field.hint) {
-    const hint = document.createElement('span');
-    hint.className = 'field__hint';
-    hint.textContent = field.hint;
-    wrapper.appendChild(hint);
   }
 
   control.addEventListener('input', onFormChange);

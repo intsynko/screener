@@ -145,10 +145,21 @@ body {
   margin-bottom: 0;
 }
 
-.field__label {
+.field__description {
   font-size: 0.85rem;
   font-weight: 600;
   color: #cbd5e1;
+}
+
+.field__description-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.field--checkbox .field__description-row {
+  flex: 1;
 }
 
 .field__control {
@@ -170,11 +181,6 @@ body {
 
 .field__control--invalid {
   border-color: var(--danger);
-}
-
-.field__hint {
-  font-size: 0.78rem;
-  color: var(--text-muted);
 }
 
 .field--checkbox {
@@ -321,17 +327,6 @@ body {
 
 .footer a:hover {
   text-decoration: underline;
-}
-
-.field__label-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
-}
-
-.field--checkbox .field__label-row {
-  flex: 1;
 }
 
 .btn-help {
